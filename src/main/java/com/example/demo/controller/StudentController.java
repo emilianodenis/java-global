@@ -41,4 +41,9 @@ public class StudentController {
                     return studentRepository.save(newStudent);
                 });
     }
+
+    @PostMapping()
+    Student newStudent(@RequestBody Student newStudent) {
+        return studentRepository.save(newStudent);
+    }
 }
