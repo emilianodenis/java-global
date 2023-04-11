@@ -5,6 +5,7 @@ import com.example.demo.entity.StudentRepository;
 import com.example.demo.model.exception.StudentNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -19,7 +20,9 @@ public class StudentController {
 
     @GetMapping()
     public List<Student> getStudents() {
-        return studentRepository.findAll();
+        var students = studentRepository.findAll();
+        students.sort(Comparator.comparing(Student::getLastName, String.CASE_INSENSITIVE_ORDER).thenComparing(Student::getFirstName, String.CASE_INSENSITIVE_ORDER));
+        return students;
     }
 
     @GetMapping("/{id}")
@@ -45,5 +48,13 @@ public class StudentController {
     @PostMapping()
     Student newStudent(@RequestBody Student newStudent) {
         return studentRepository.save(newStudent);
+    }
+
+    @DeleteMapping("{id}")
+    void deleteStudent(@PathVariable Integer id) {
+        var student = studentRepository.findById(id);
+        if (student.isPresent()) {
+            studentRepository.deleteById(id);
+        }
     }
 }
