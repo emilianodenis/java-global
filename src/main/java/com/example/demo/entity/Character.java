@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Student {
+public class Character {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
@@ -14,13 +14,13 @@ public class Student {
     private String lastName;
     private String email;
 
-    public Student(String firstName, String lastName, String email) {
+    public Character(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
     }
 
-    public Student() {
+    public Character() {
 
     }
 
@@ -58,7 +58,7 @@ public class Student {
 
     @Override
     public String toString() {
-        return "Student{" +
+        return "Character{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +

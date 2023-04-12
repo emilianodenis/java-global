@@ -12,10 +12,10 @@ public class LoadData {
     private static final Logger log = LoggerFactory.getLogger(LoadData.class);
 
     @Bean
-    CommandLineRunner initDatabase(StudentRepository repository) {
+    CommandLineRunner initDatabase(CharacterRepository repository) {
         return args -> {
-            log.info("Preloading" + repository.save(new Student("Frodo", "Baggins", "frodo@baggins.lotr")));
-            log.info("Preloading" + repository.save(new Student("Bilbo", "Baggins", "bilbo@baggins.lotr")));
+            log.info("Preloading" + repository.save(new Character("Frodo", "Baggins", "frodo@baggins.lotr")));
+            log.info("Preloading" + repository.save(new Character("Bilbo", "Baggins", "bilbo@baggins.lotr")));
         };
     }
 }
