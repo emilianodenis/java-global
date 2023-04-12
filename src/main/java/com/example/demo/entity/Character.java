@@ -14,10 +14,13 @@ public class Character {
     private String lastName;
     private String email;
 
-    public Character(String firstName, String lastName, String email) {
+    private String profession;
+
+    public Character(String firstName, String lastName, String email, String profession) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.profession = profession;
     }
 
     public Character() {
@@ -56,6 +59,14 @@ public class Character {
         this.email = email;
     }
 
+    public String getProfession() {
+        return profession;
+    }
+
+    public void setProfession(String profession) {
+        this.profession = profession;
+    }
+
     @Override
     public String toString() {
         return "Character{" +
@@ -63,6 +74,7 @@ public class Character {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
+                ", profession='" + profession + '\'' +
                 '}';
     }
 }
