@@ -1,26 +1,34 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Character {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
+
+    @Column(name = "first_name")
     private String firstName;
+
+    @Column(name = "last_name")
     private String lastName;
+
+    @Column(name = "email")
     private String email;
 
+    @Column(name = "profession")
     private String profession;
+    @Column(name = "profession_id")
+    private Integer professionId;
 
-    public Character(String firstName, String lastName, String email, String profession) {
+    public Character(String firstName, String lastName, String email, String profession, Integer professionId) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.profession = profession;
+        this.professionId = professionId;
     }
 
     public Character() {
@@ -67,6 +75,14 @@ public class Character {
         this.profession = profession;
     }
 
+    public Integer getProfessionId() {
+        return professionId;
+    }
+
+    public void setProfessionId(Integer professionId) {
+        this.professionId = professionId;
+    }
+
     @Override
     public String toString() {
         return "Character{" +
@@ -75,6 +91,7 @@ public class Character {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", profession='" + profession + '\'' +
+                ", professionId='" + professionId + '\'' +
                 '}';
     }
 }
