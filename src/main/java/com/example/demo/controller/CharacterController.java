@@ -36,8 +36,9 @@ public class CharacterController {
                 .map(character -> {
                     character.setFirstName(newCharacter.getFirstName());
                     character.setLastName(newCharacter.getLastName());
+                    character.setProfession(newCharacter.getProfession());
                     character.setEmail(newCharacter.getEmail());
-                    return characterRepository.save(newCharacter);
+                    return characterRepository.save(character);
                 })
                 .orElseGet(() -> {
                     newCharacter.setId(id);
