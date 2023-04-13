@@ -1,11 +1,11 @@
 package com.example.demo.controller;
 
+import com.example.demo.entity.BaseCharacter;
 import com.example.demo.entity.Character;
 import com.example.demo.entity.CharacterRepository;
 import com.example.demo.model.exception.CharacterNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -18,11 +18,24 @@ public class CharacterController {
         this.characterRepository = characterRepository;
     }
 
+//    @GetMapping()
+//    public List<Character> getCharacters() {
+//        var characters = characterRepository.findAll();
+//        characters.sort(Comparator.comparing(Character::getLastName, String.CASE_INSENSITIVE_ORDER).thenComparing(Character::getFirstName, String.CASE_INSENSITIVE_ORDER));
+//        return characters;
+//    }
+
     @GetMapping()
-    public List<Character> getCharacters() {
-        var characters = characterRepository.findAll();
-        characters.sort(Comparator.comparing(Character::getLastName, String.CASE_INSENSITIVE_ORDER).thenComparing(Character::getFirstName, String.CASE_INSENSITIVE_ORDER));
-        return characters;
+    public List<BaseCharacter> getCharacters() {
+        return characterRepository
+                .listAll()
+                .stream()
+                .map(arr -> new BaseCharacter(
+                        (Integer) arr[CharacterRepository.ID_RANK],
+                        (String) arr[CharacterRepository.FIRST_NAME_RANK],
+                        (String) arr[CharacterRepository.LAST_NAME_RANK])
+                )
+                .toList();
     }
 
     @GetMapping("/{id}")
@@ -40,10 +53,7 @@ public class CharacterController {
                     character.setEmail(newCharacter.getEmail());
                     return characterRepository.save(character);
                 })
-                .orElseGet(() -> {
-                    newCharacter.setId(id);
-                    return characterRepository.save(newCharacter);
-                });
+                .orElseGet(() -> characterRepository.save(newCharacter));
     }
 
     @PostMapping()

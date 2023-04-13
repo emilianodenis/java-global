@@ -34,15 +34,15 @@ SELECT SET (@magician_id, ID) FROM PROFESSION WHERE DESCRIPTION = @magician;
 SELECT SET (@archer_id, ID) FROM PROFESSION WHERE DESCRIPTION = @archer;
 SELECT SET (@king_id, ID) FROM PROFESSION WHERE DESCRIPTION = @king;
 
-INSERT INTO CHARACTER (FIRST_NAME, LAST_NAME, EMAIL, PROFESSION, PROFESSION_ID)
-VALUES ('Frodo', 'Baggins', 'frodo@baggins.lotr', 'burglar', @burglar_id);
-INSERT INTO CHARACTER (FIRST_NAME, LAST_NAME, EMAIL, PROFESSION, PROFESSION_ID)
-VALUES ('Bilbo', 'Baggins', 'bilbo@baggins.lotr', 'thief', @thief_id);
-INSERT INTO CHARACTER (FIRST_NAME, LAST_NAME, EMAIL, PROFESSION, PROFESSION_ID)
-VALUES ('Samwise', 'Gamegee', 'sam@wise.lotr', 'gardener', @gardener_id);
-INSERT INTO CHARACTER (FIRST_NAME, LAST_NAME, EMAIL, PROFESSION, PROFESSION_ID)
-VALUES ('Gandalf', 'The Grey', 'gandalf@sorcerer.lotr', 'magician', @magician_id);
-INSERT INTO CHARACTER (FIRST_NAME, LAST_NAME, EMAIL, PROFESSION, PROFESSION_ID)
-VALUES ('Legolas', 'Greenleaf', 'legolas@rivendale.lotr', 'archer', @archer_id);
-INSERT INTO CHARACTER (FIRST_NAME, LAST_NAME, EMAIL, PROFESSION, PROFESSION_ID)
-VALUES ('Aragorn', 'Elendil', 'aragorn@gondor.lotr', 'king', @king_id);
+INSERT INTO CHARACTER (FIRST_NAME, LAST_NAME, EMAIL, PROFESSION_ID)
+VALUES ('Frodo', 'Baggins', 'frodo@baggins.lotr', @burglar_id);
+INSERT INTO CHARACTER (FIRST_NAME, LAST_NAME, EMAIL, PROFESSION_ID)
+VALUES ('Bilbo', 'Baggins', 'bilbo@baggins.lotr', @thief_id);
+INSERT INTO CHARACTER (FIRST_NAME, LAST_NAME, EMAIL, PROFESSION_ID)
+VALUES ('Samwise', 'Gamegee', 'sam@wise.lotr', @gardener_id);
+INSERT INTO CHARACTER (FIRST_NAME, LAST_NAME, EMAIL, PROFESSION_ID)
+VALUES ('Gandalf', 'The Grey', 'gandalf@sorcerer.lotr', @magician_id);
+INSERT INTO CHARACTER (FIRST_NAME, LAST_NAME, EMAIL, PROFESSION_ID)
+VALUES ('Legolas', 'Greenleaf', 'legolas@rivendale.lotr', @archer_id);
+INSERT INTO CHARACTER (FIRST_NAME, LAST_NAME, EMAIL, PROFESSION_ID)
+VALUES ('Aragorn', 'Elendil', 'aragorn@gondor.lotr', @king_id);
