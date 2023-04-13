@@ -3,7 +3,9 @@ package com.example.demo.controller;
 import com.example.demo.entity.BaseCharacter;
 import com.example.demo.entity.Character;
 import com.example.demo.entity.CharacterRepository;
+import com.example.demo.message.queue.MainQueue;
 import com.example.demo.model.exception.CharacterNotFoundException;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,9 +15,11 @@ import java.util.List;
 public class CharacterController {
 
     private final CharacterRepository characterRepository;
+    private final RabbitTemplate rabbitTemplate;
 
-    public CharacterController(CharacterRepository characterRepository) {
+    public CharacterController(CharacterRepository characterRepository, RabbitTemplate rabbitTemplate) {
         this.characterRepository = characterRepository;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
 //    @GetMapping()
@@ -27,7 +31,7 @@ public class CharacterController {
 
     @GetMapping()
     public List<BaseCharacter> getCharacters() {
-        return  characterRepository.getCharactersSummary();
+        return characterRepository.getCharactersSummary();
     }
 
     @GetMapping("/{id}")
@@ -50,7 +54,9 @@ public class CharacterController {
 
     @PostMapping()
     Character newCharacter(@RequestBody Character newCharacter) {
-        return characterRepository.save(newCharacter);
+        var character = characterRepository.save(newCharacter);
+        notify("New character created: " + character);
+        return character;
     }
 
     @DeleteMapping("{id}")
@@ -59,5 +65,11 @@ public class CharacterController {
         if (character.isPresent()) {
             characterRepository.deleteById(id);
         }
+    }
+
+    private void notify(String message) {
+        var routingKey = MainQueue.baseRoutingKey + "baz";
+        var topicExchangeName = MainQueue.topicExchangeName;
+        rabbitTemplate.convertAndSend(topicExchangeName, routingKey, message);
     }
 }
