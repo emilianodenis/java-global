@@ -7,10 +7,29 @@ import java.util.List;
 
 public interface CharacterRepository extends JpaRepository<Character, Integer> {
 
-    int ID_RANK = 0;
-    int FIRST_NAME_RANK = 1;
-    int LAST_NAME_RANK = 2;
+    enum FIELD_RANK{
+        ID(0),
+        FIRST_NAME(1),
+        LAST_NAME(2);
+
+        public final Integer value;
+
+        FIELD_RANK(Integer value){
+            this.value = value;
+        }
+    }
 
     @Query(value = "SELECT id, first_name, last_name FROM Character ORDER BY last_name, first_name", nativeQuery = true)
     List<Object[]> listAll();
+
+    default List<BaseCharacter> getCharactersSummary() {
+        return listAll()
+                .stream()
+                .map(arr -> new BaseCharacter(
+                        (Integer) arr[FIELD_RANK.ID.value],
+                        (String) arr[FIELD_RANK.FIRST_NAME.value],
+                        (String) arr[FIELD_RANK.LAST_NAME.value])
+
+                ).toList();
+    }
 }

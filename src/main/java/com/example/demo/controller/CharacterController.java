@@ -27,15 +27,7 @@ public class CharacterController {
 
     @GetMapping()
     public List<BaseCharacter> getCharacters() {
-        return characterRepository
-                .listAll()
-                .stream()
-                .map(arr -> new BaseCharacter(
-                        (Integer) arr[CharacterRepository.ID_RANK],
-                        (String) arr[CharacterRepository.FIRST_NAME_RANK],
-                        (String) arr[CharacterRepository.LAST_NAME_RANK])
-                )
-                .toList();
+        return  characterRepository.getCharactersSummary();
     }
 
     @GetMapping("/{id}")

@@ -15,17 +15,12 @@ public class BaseCharacter {
     private String lastName;
 
     public BaseCharacter(Integer id, String firstName, String lastName) {
-        this(firstName, lastName);
         this.id = id;
-    }
-
-    public BaseCharacter(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
     public BaseCharacter() {
-
     }
 
     public int getId() {
