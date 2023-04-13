@@ -35,9 +35,9 @@ SELECT SET (@archer_id, ID) FROM PROFESSION WHERE DESCRIPTION = @archer;
 SELECT SET (@king_id, ID) FROM PROFESSION WHERE DESCRIPTION = @king;
 
 INSERT INTO CHARACTER (FIRST_NAME, LAST_NAME, EMAIL, PROFESSION_ID)
-VALUES ('Frodo', 'Baggins', 'frodo@baggins.lotr', @burglar_id);
+VALUES ('Frodo', 'Baggins', 'frodo@baggins.lotr', @thief_id);
 INSERT INTO CHARACTER (FIRST_NAME, LAST_NAME, EMAIL, PROFESSION_ID)
-VALUES ('Bilbo', 'Baggins', 'bilbo@baggins.lotr', @thief_id);
+VALUES ('Bilbo', 'Baggins', 'bilbo@baggins.lotr', @burglar_id);
 INSERT INTO CHARACTER (FIRST_NAME, LAST_NAME, EMAIL, PROFESSION_ID)
 VALUES ('Samwise', 'Gamegee', 'sam@wise.lotr', @gardener_id);
 INSERT INTO CHARACTER (FIRST_NAME, LAST_NAME, EMAIL, PROFESSION_ID)
