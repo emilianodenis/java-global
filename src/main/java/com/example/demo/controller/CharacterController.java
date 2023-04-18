@@ -48,9 +48,15 @@ public class CharacterController {
                     character.setLastName(newCharacter.getLastName());
                     character.setProfession(newCharacter.getProfession());
                     character.setEmail(newCharacter.getEmail());
-                    return characterRepository.save(character);
+                    var updated = characterRepository.save(character);
+                    notify("character updated: " + updated);
+                    return updated;
                 })
-                .orElseGet(() -> characterRepository.save(newCharacter));
+                .orElseGet(() -> {
+                    var character = characterRepository.save(newCharacter);
+                    notify("New character created: " + character);
+                    return character;
+                });
     }
 
     @PostMapping()
@@ -65,6 +71,7 @@ public class CharacterController {
         var character = characterRepository.findById(id);
         if (character.isPresent()) {
             characterRepository.deleteById(id);
+            notify("character deleted: " + character);
         }
     }
 

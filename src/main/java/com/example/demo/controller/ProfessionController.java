@@ -40,9 +40,15 @@ public class ProfessionController {
         return professionRepository.findById(id)
                 .map(profession -> {
                     profession.setDescription(newProfession.getDescription());
-                    return professionRepository.save(profession);
+                    var updated = professionRepository.save(profession);
+                    notify("profession updated: " + profession);
+                    return updated;
                 })
-                .orElseGet(() -> professionRepository.save(newProfession));
+                .orElseGet(() -> {
+                    var profession = professionRepository.save(newProfession);
+                    notify("New profession created: " + profession);
+                    return profession;
+                });
     }
 
     @PostMapping()
@@ -57,6 +63,7 @@ public class ProfessionController {
         var profession = professionRepository.findById(id);
         if (profession.isPresent()) {
             professionRepository.deleteById(id);
+            notify("profession deleted: " + profession);
         }
     }
 
