@@ -3,9 +3,10 @@ package com.example.demo.controller;
 import com.example.demo.entity.BaseCharacter;
 import com.example.demo.entity.Character;
 import com.example.demo.entity.CharacterRepository;
-import com.example.demo.message.queue.MainQueue;
 import com.example.demo.model.exception.CharacterNotFoundException;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import com.example.demo.service.queue.Exchange;
+import com.example.demo.service.queue.MessagePublisher;
+import com.example.demo.service.queue.Queue;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,11 +16,11 @@ import java.util.List;
 public class CharacterController {
 
     private final CharacterRepository characterRepository;
-    private final RabbitTemplate rabbitTemplate;
+    private final MessagePublisher messagePublisher;
 
-    public CharacterController(CharacterRepository characterRepository, RabbitTemplate rabbitTemplate) {
+    public CharacterController(CharacterRepository characterRepository, MessagePublisher messagePublisher/*RabbitTemplate rabbitTemplate*/) {
         this.characterRepository = characterRepository;
-        this.rabbitTemplate = rabbitTemplate;
+        this.messagePublisher = messagePublisher;
     }
 
 //    @GetMapping()
@@ -68,8 +69,6 @@ public class CharacterController {
     }
 
     private void notify(String message) {
-        var routingKey = MainQueue.baseRoutingKey + "baz";
-        var topicExchangeName = MainQueue.topicExchangeName;
-        rabbitTemplate.convertAndSend(topicExchangeName, routingKey, message);
+        this.messagePublisher.publishSimpleString(Exchange.DEFAULT, Queue.CHARACTERS, null, message);
     }
 }

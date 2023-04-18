@@ -2,9 +2,10 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Profession;
 import com.example.demo.entity.ProfessionRepository;
-import com.example.demo.message.queue.MainQueue;
 import com.example.demo.model.exception.ProfessionNotFoundException;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import com.example.demo.service.queue.Exchange;
+import com.example.demo.service.queue.MessagePublisher;
+import com.example.demo.service.queue.Queue;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
@@ -15,11 +16,11 @@ import java.util.List;
 public class ProfessionController {
 
     private final ProfessionRepository professionRepository;
-    private final RabbitTemplate rabbitTemplate;
+    private final MessagePublisher messagePublisher;
 
-    public ProfessionController(ProfessionRepository professionRepository, RabbitTemplate rabbitTemplate) {
+    public ProfessionController(ProfessionRepository professionRepository, MessagePublisher messagePublisher/*RabbitTemplate rabbitTemplate*/) {
         this.professionRepository = professionRepository;
-        this.rabbitTemplate = rabbitTemplate;
+        this.messagePublisher = messagePublisher;
     }
 
     @GetMapping()
@@ -60,9 +61,6 @@ public class ProfessionController {
     }
 
     private void notify(String message) {
-        var routingKey = MainQueue.baseRoutingKey + "baz";
-        var topicExchangeName = MainQueue.topicExchangeName;
-        rabbitTemplate.convertAndSend(topicExchangeName, routingKey, message);
+        this.messagePublisher.publishSimpleString(Exchange.DEFAULT, Queue.PROFESSIONS, null, message);
     }
-
 }
