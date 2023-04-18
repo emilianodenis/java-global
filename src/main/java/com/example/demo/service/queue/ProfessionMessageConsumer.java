@@ -8,8 +8,6 @@ import org.springframework.stereotype.Component;
 public class ProfessionMessageConsumer implements CommandLineRunner {
 
     private final ConnectionFactory factory = new ConnectionFactory();
-    private Connection connection;
-    private Channel channel;
 
     private final DeliverCallback deliverCallback = (consumer, delivery) -> {
         String message = new String(delivery.getBody());
@@ -19,8 +17,8 @@ public class ProfessionMessageConsumer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         try {
-            connection = factory.newConnection();
-            channel = connection.createChannel();
+            var connection = factory.newConnection();
+            var channel = connection.createChannel();
 
             channel.basicConsume(
                     Queue.PROFESSIONS.getQueueType(),
