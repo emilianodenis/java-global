@@ -1,5 +1,6 @@
 package com.example.demo.service.queue;
 
+import com.example.demo.websocket.SessionHandler;
 import com.rabbitmq.client.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -8,11 +9,18 @@ import org.springframework.stereotype.Component;
 public class ProfessionMessageConsumer implements CommandLineRunner {
 
     private final ConnectionFactory factory = new ConnectionFactory();
+    private final SessionHandler wsSessionHandler;
 
-    private final DeliverCallback deliverCallback = (consumer, delivery) -> {
+    public ProfessionMessageConsumer(SessionHandler wsSessionHandler) {
+        this.wsSessionHandler = wsSessionHandler;
+    }
+
+    private final DeliverCallback deliverCallback = (consumer, delivery) -> processCallback(delivery);
+
+    private void processCallback(Delivery delivery) {
         String message = new String(delivery.getBody());
-        System.out.printf("Received profession message: \"%s\"%n", message);
-    };
+        wsSessionHandler.notifyProfessionChange(message);
+    }
 
     @Override
     public void run(String... args) {
