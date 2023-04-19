@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import com.example.demo.entity.BaseCharacter;
 import com.example.demo.entity.Character;
 import com.example.demo.entity.CharacterRepository;
+import com.example.demo.model.Action;
+import com.example.demo.model.DemoMessage;
 import com.example.demo.model.exception.CharacterNotFoundException;
 import com.example.demo.service.queue.Exchange;
 import com.example.demo.service.queue.MessagePublisher;
@@ -49,12 +51,12 @@ public class CharacterController {
                     character.setProfession(newCharacter.getProfession());
                     character.setEmail(newCharacter.getEmail());
                     var updated = characterRepository.save(character);
-                    notify("character updated: " + updated);
+                    notify(Action.UPDATE, updated, updated.getId());
                     return updated;
                 })
                 .orElseGet(() -> {
                     var character = characterRepository.save(newCharacter);
-                    notify("New character created: " + character);
+                    notify(Action.CREATE, character, character.getId());
                     return character;
                 });
     }
@@ -62,7 +64,7 @@ public class CharacterController {
     @PostMapping()
     Character newCharacter(@RequestBody Character newCharacter) {
         var character = characterRepository.save(newCharacter);
-        notify("New character created: " + character);
+        notify(Action.CREATE, character, character.getId());
         return character;
     }
 
@@ -71,11 +73,11 @@ public class CharacterController {
         var character = characterRepository.findById(id);
         if (character.isPresent()) {
             characterRepository.deleteById(id);
-            notify("character deleted: " + character);
+            notify(Action.DELETE, character.get(), character.get().getId());
         }
     }
 
-    private void notify(String message) {
-        this.messagePublisher.publishSimpleString(Exchange.DEFAULT, Queue.CHARACTERS, null, message);
+    private void notify(Action action, Character character, Integer id) {
+        this.messagePublisher.publishSimpleMessage(Exchange.DEFAULT, Queue.CHARACTERS, null, new DemoMessage<>(action, character, id));
     }
 }

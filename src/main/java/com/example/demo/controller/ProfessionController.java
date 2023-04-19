@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Profession;
 import com.example.demo.entity.ProfessionRepository;
+import com.example.demo.model.Action;
+import com.example.demo.model.DemoMessage;
 import com.example.demo.model.exception.ProfessionNotFoundException;
 import com.example.demo.service.queue.Exchange;
 import com.example.demo.service.queue.MessagePublisher;
@@ -41,12 +43,12 @@ public class ProfessionController {
                 .map(profession -> {
                     profession.setDescription(newProfession.getDescription());
                     var updated = professionRepository.save(profession);
-                    notify("profession updated: " + profession);
+                    notify(Action.UPDATE, profession, profession.getId());
                     return updated;
                 })
                 .orElseGet(() -> {
                     var profession = professionRepository.save(newProfession);
-                    notify("New profession created: " + profession);
+                    notify(Action.CREATE, profession, profession.getId());
                     return profession;
                 });
     }
@@ -54,7 +56,7 @@ public class ProfessionController {
     @PostMapping()
     Profession newProfession(@RequestBody Profession newProfession) {
         var profession = professionRepository.save(newProfession);
-        notify("New profession created: " + profession);
+        notify(Action.CREATE, profession, profession.getId());
         return profession;
     }
 
@@ -63,11 +65,11 @@ public class ProfessionController {
         var profession = professionRepository.findById(id);
         if (profession.isPresent()) {
             professionRepository.deleteById(id);
-            notify("profession deleted: " + profession);
+            notify(Action.DELETE, profession.get(), profession.get().getId());
         }
     }
 
-    private void notify(String message) {
-        this.messagePublisher.publishSimpleString(Exchange.DEFAULT, Queue.PROFESSIONS, null, message);
+    private void notify(Action action, Profession profession, Integer id) {
+        this.messagePublisher.publishSimpleMessage(Exchange.DEFAULT, Queue.PROFESSIONS, null, new DemoMessage<>(action, profession, id));
     }
 }

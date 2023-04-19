@@ -31,10 +31,6 @@ public class SessionHandler extends TextWebSocketHandler {
 
     private final List<WebSocketSession> sessions = new ArrayList<>();
 
-    public void addSession(WebSocketSession session) {
-        sessions.add(session);
-    }
-
     public void removeSession(WebSocketSession session) {
         sessions.remove(session);
     }
@@ -59,17 +55,21 @@ public class SessionHandler extends TextWebSocketHandler {
         }
     }
 
-    public void notifyProfessionChange(Profession profession) {
-        try {
-            var pro = new ObjectMapper().writeValueAsString(profession);
-            var json = new JSONObject(pro);
-            sendMessage(json);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public void notifyProfessionChange(Profession profession) {
+//        try {
+//            var pro = new ObjectMapper().writeValueAsString(profession);
+//            var json = new JSONObject(pro);
+//            sendMessage(json);
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     public void notifyProfessionChange(String message) {
+        sendMessage(message);
+    }
+
+    public void notifyCharacterChange(String message) {
         sendMessage(message);
     }
 }

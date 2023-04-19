@@ -1,9 +1,14 @@
 package com.example.demo.service.queue;
 
+import com.example.demo.entity.Profession;
+import com.example.demo.model.DemoMessage;
 import com.example.demo.websocket.SessionHandler;
 import com.rabbitmq.client.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+import java.io.ByteArrayInputStream;
+import java.io.ObjectInputStream;
 
 @Component
 public class ProfessionMessageConsumer implements CommandLineRunner {
@@ -15,11 +20,18 @@ public class ProfessionMessageConsumer implements CommandLineRunner {
         this.wsSessionHandler = wsSessionHandler;
     }
 
-    private final DeliverCallback deliverCallback = (consumer, delivery) -> processCallback(delivery);
+    private final DeliverCallback deliverCallback = (consumer, delivery) -> {
+        processCallback(delivery);
+    };
 
     private void processCallback(Delivery delivery) {
-        String message = new String(delivery.getBody());
-        wsSessionHandler.notifyProfessionChange(message);
+        try (var inputStream = new ByteArrayInputStream(delivery.getBody()); var outputStream = new ObjectInputStream(inputStream)) {
+            var demoMessage = (DemoMessage<Profession>) outputStream.readObject();
+            wsSessionHandler.notifyProfessionChange(demoMessage.toString());
+
+        } catch (Exception e) {
+            System.out.println("cannot process: " + e.getMessage());
+        }
     }
 
     @Override
@@ -36,6 +48,7 @@ public class ProfessionMessageConsumer implements CommandLineRunner {
                     }
             );
         } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 }
