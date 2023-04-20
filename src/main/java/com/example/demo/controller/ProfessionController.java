@@ -70,6 +70,6 @@ public class ProfessionController {
     }
 
     private void notify(Action action, Profession profession, Integer id) {
-        this.messagePublisher.publishSimpleMessage(Exchange.DEFAULT, Queue.PROFESSIONS, null, new DemoMessage<>(action, profession, id));
+        this.messagePublisher.publishSimpleMessage(Exchange.DEFAULT, Queue.PROFESSIONS, null, new DemoMessage<>(action, profession, id, null));
     }
 }

@@ -39,7 +39,7 @@ VALUES ('Frodo', 'Baggins', 'frodo@baggins.lotr', @thief_id);
 INSERT INTO CHARACTER (FIRST_NAME, LAST_NAME, EMAIL, PROFESSION_ID)
 VALUES ('Bilbo', 'Baggins', 'bilbo@baggins.lotr', @burglar_id);
 INSERT INTO CHARACTER (FIRST_NAME, LAST_NAME, EMAIL, PROFESSION_ID)
-VALUES ('Samwise', 'Gamegee', 'sam@wise.lotr', @gardener_id);
+VALUES ('Samwise', 'Gamgee', 'sam@wise.lotr', @gardener_id);
 INSERT INTO CHARACTER (FIRST_NAME, LAST_NAME, EMAIL, PROFESSION_ID)
 VALUES ('Gandalf', 'The Grey', 'gandalf@sorcerer.lotr', @magician_id);
 INSERT INTO CHARACTER (FIRST_NAME, LAST_NAME, EMAIL, PROFESSION_ID)

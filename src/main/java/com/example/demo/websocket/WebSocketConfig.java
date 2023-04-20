@@ -9,13 +9,16 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
-    private final SessionHandler session;
+    private final ProfessionSessionHandler professionSessionHandler;
+    private final CharacterSessionHandler characterSessionHandler;
 
-    public WebSocketConfig(SessionHandler session) {
-        this.session = session;
+    public WebSocketConfig(ProfessionSessionHandler session, CharacterSessionHandler characterSessionHandler) {
+        this.professionSessionHandler = session;
+        this.characterSessionHandler = characterSessionHandler;
     }
 
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(session, "/ws/professions");
+        registry.addHandler(professionSessionHandler, "/ws/professions");
+        registry.addHandler(characterSessionHandler, "/ws/characters");
     }
 }

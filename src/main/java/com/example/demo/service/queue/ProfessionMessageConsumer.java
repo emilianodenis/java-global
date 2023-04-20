@@ -1,22 +1,18 @@
 package com.example.demo.service.queue;
 
-import com.example.demo.entity.Profession;
-import com.example.demo.model.DemoMessage;
-import com.example.demo.websocket.SessionHandler;
+import com.example.demo.utils.ObjectUtils;
+import com.example.demo.websocket.ProfessionSessionHandler;
 import com.rabbitmq.client.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
 
 @Component
 public class ProfessionMessageConsumer implements CommandLineRunner {
 
     private final ConnectionFactory factory = new ConnectionFactory();
-    private final SessionHandler wsSessionHandler;
+    private final ProfessionSessionHandler wsSessionHandler;
 
-    public ProfessionMessageConsumer(SessionHandler wsSessionHandler) {
+    public ProfessionMessageConsumer(ProfessionSessionHandler wsSessionHandler) {
         this.wsSessionHandler = wsSessionHandler;
     }
 
@@ -25,10 +21,8 @@ public class ProfessionMessageConsumer implements CommandLineRunner {
     };
 
     private void processCallback(Delivery delivery) {
-        try (var inputStream = new ByteArrayInputStream(delivery.getBody()); var outputStream = new ObjectInputStream(inputStream)) {
-            var demoMessage = (DemoMessage<Profession>) outputStream.readObject();
-            wsSessionHandler.notifyProfessionChange(demoMessage.toString());
-
+        try {
+            wsSessionHandler.notifyProfessionChange(ObjectUtils.deSerialize(delivery.getBody()));
         } catch (Exception e) {
             System.out.println("cannot process: " + e.getMessage());
         }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 
+
 @Entity
 @Table(name = "CHARACTER")
 public class Character implements Serializable {

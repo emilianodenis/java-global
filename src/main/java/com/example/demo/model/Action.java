@@ -4,5 +4,7 @@ public enum Action {
     READ(),
     UPDATE(),
     CREATE(),
-    DELETE()
+    DELETE(),
+    INFO(),
+    SESSION_ID()
 }

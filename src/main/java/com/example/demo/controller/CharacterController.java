@@ -78,6 +78,6 @@ public class CharacterController {
     }
 
     private void notify(Action action, Character character, Integer id) {
-        this.messagePublisher.publishSimpleMessage(Exchange.DEFAULT, Queue.CHARACTERS, null, new DemoMessage<>(action, character, id));
+        this.messagePublisher.publishSimpleMessage(Exchange.DEFAULT, Queue.CHARACTERS, null, new DemoMessage<>(action, character, id, null));
     }
 }
