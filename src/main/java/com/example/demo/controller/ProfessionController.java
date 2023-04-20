@@ -38,38 +38,38 @@ public class ProfessionController {
     }
 
     @PutMapping("/{id}")
-    public Profession replaceProfession(@RequestBody Profession newProfession, @PathVariable Integer id) {
+    public Profession replaceProfession(@RequestBody Profession newProfession, @PathVariable Integer id, @RequestParam(name="professionSessionId") String sessionId) {
         return professionRepository.findById(id)
                 .map(profession -> {
                     profession.setDescription(newProfession.getDescription());
                     var updated = professionRepository.save(profession);
-                    notify(Action.UPDATE, profession, profession.getId());
+                    notify(Action.UPDATE, profession, profession.getId(), sessionId);
                     return updated;
                 })
                 .orElseGet(() -> {
                     var profession = professionRepository.save(newProfession);
-                    notify(Action.CREATE, profession, profession.getId());
+                    notify(Action.CREATE, profession, profession.getId(), sessionId);
                     return profession;
                 });
     }
 
     @PostMapping()
-    Profession newProfession(@RequestBody Profession newProfession) {
+    Profession newProfession(@RequestBody Profession newProfession, @RequestParam(name="professionSessionId") String sessionId) {
         var profession = professionRepository.save(newProfession);
-        notify(Action.CREATE, profession, profession.getId());
+        notify(Action.CREATE, profession, profession.getId(), sessionId);
         return profession;
     }
 
     @DeleteMapping("{id}")
-    void deleteProfession(@PathVariable Integer id) {
+    void deleteProfession(@PathVariable Integer id, @RequestParam(name="professionSessionId") String sessionId) {
         var profession = professionRepository.findById(id);
         if (profession.isPresent()) {
             professionRepository.deleteById(id);
-            notify(Action.DELETE, profession.get(), profession.get().getId());
+            notify(Action.DELETE, profession.get(), profession.get().getId(), sessionId);
         }
     }
 
-    private void notify(Action action, Profession profession, Integer id) {
-        this.messagePublisher.publishSimpleMessage(Exchange.DEFAULT, Queue.PROFESSIONS, null, new DemoMessage<>(action, profession, id, null));
+    private void notify(Action action, Profession profession, Integer id, String sessionToExclude) {
+        this.messagePublisher.publishSimpleMessage(Exchange.DEFAULT, Queue.PROFESSIONS, null, new DemoMessage<>(action, profession, id, sessionToExclude));
     }
 }

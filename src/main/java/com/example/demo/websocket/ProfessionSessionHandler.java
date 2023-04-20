@@ -40,7 +40,9 @@ public class ProfessionSessionHandler extends TextWebSocketHandler {
     private void sendMessage(DemoMessage<Profession> message) {
         for (var session : sessions) {
             try {
-                session.sendMessage(new TextMessage(ObjectUtils.toJsonString(message)));
+                if (message.getSessionId() != null && !message.getSessionId().equals(session.getId())) {
+                    session.sendMessage(new TextMessage(ObjectUtils.toJsonString(message)));
+                }
             } catch (IOException e) {
                 removeSession(session);
             }

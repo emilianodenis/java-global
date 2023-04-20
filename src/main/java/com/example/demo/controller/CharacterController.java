@@ -43,7 +43,7 @@ public class CharacterController {
     }
 
     @PutMapping("/{id}")
-    public Character replaceCharacter(@RequestBody Character newCharacter, @PathVariable Integer id) {
+    public Character replaceCharacter(@RequestBody Character newCharacter, @PathVariable Integer id, @RequestParam(name="characterSessionId") String sessionId) {
         return characterRepository.findById(id)
                 .map(character -> {
                     character.setFirstName(newCharacter.getFirstName());
@@ -51,33 +51,33 @@ public class CharacterController {
                     character.setProfession(newCharacter.getProfession());
                     character.setEmail(newCharacter.getEmail());
                     var updated = characterRepository.save(character);
-                    notify(Action.UPDATE, updated, updated.getId());
+                    notify(Action.UPDATE, updated, updated.getId(), sessionId);
                     return updated;
                 })
                 .orElseGet(() -> {
                     var character = characterRepository.save(newCharacter);
-                    notify(Action.CREATE, character, character.getId());
+                    notify(Action.CREATE, character, character.getId(), sessionId);
                     return character;
                 });
     }
 
     @PostMapping()
-    Character newCharacter(@RequestBody Character newCharacter) {
+    Character newCharacter(@RequestBody Character newCharacter, @RequestParam(name="characterSessionId") String sessionId) {
         var character = characterRepository.save(newCharacter);
-        notify(Action.CREATE, character, character.getId());
+        notify(Action.CREATE, character, character.getId(), sessionId);
         return character;
     }
 
     @DeleteMapping("{id}")
-    void deleteCharacter(@PathVariable Integer id) {
+    void deleteCharacter(@PathVariable Integer id, @RequestParam(name="characterSessionId") String sessionId) {
         var character = characterRepository.findById(id);
         if (character.isPresent()) {
             characterRepository.deleteById(id);
-            notify(Action.DELETE, character.get(), character.get().getId());
+            notify(Action.DELETE, character.get(), character.get().getId(), sessionId);
         }
     }
 
-    private void notify(Action action, Character character, Integer id) {
-        this.messagePublisher.publishSimpleMessage(Exchange.DEFAULT, Queue.CHARACTERS, null, new DemoMessage<>(action, character, id, null));
+    private void notify(Action action, Character character, Integer id, String sessionToExclude) {
+        this.messagePublisher.publishSimpleMessage(Exchange.DEFAULT, Queue.CHARACTERS, null, new DemoMessage<>(action, character, id, sessionToExclude));
     }
 }
