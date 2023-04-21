@@ -8,13 +8,13 @@ import java.io.Serializable;
 public class DemoMessage<T> implements Serializable {
 
     private final Action action;
-    private final T message;
+    private final T content;
     private final Integer id;
     private final String sessionId;
 
-    public DemoMessage(Action action, T message, Integer id, String sessionId) {
+    public DemoMessage(Action action, T content, Integer id, String sessionId) {
         this.action = action;
-        this.message = message;
+        this.content = content;
         this.id = id;
         this.sessionId = sessionId;
     }
@@ -23,8 +23,8 @@ public class DemoMessage<T> implements Serializable {
         return action;
     }
 
-    public T getMessage() {
-        return message;
+    public T getContent() {
+        return content;
     }
 
     public Integer getId() {
@@ -40,7 +40,7 @@ public class DemoMessage<T> implements Serializable {
         return "DemoMessage{" +
                 "action=" + action +
                 ",id=" + id +
-                ", message=" + message +
+                ", message=" + content +
                 ", sessionId=" + sessionId +
                 '}';
     }
